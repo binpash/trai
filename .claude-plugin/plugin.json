@@ -1,0 +1,20 @@
+{
+  "name": "trai",
+  "version": "0.1.0",
+  "description": "Sandbox every Bash tool call through binpash/try. Review the accumulated diff after the session and commit or discard.",
+  "authors": [
+    {"name": "kkallas", "email": "konstantinos.kallas@hotmail.com"},
+    {"name": "guyvdb", "email": "guyvdb@gmail.com"}
+  ],
+  "homepage": "https://github.com/binpash/trai",
+  "repository": "https://github.com/binpash/trai",
+  "license": "MIT",
+  "keywords": [
+    "sandbox",
+    "try",
+    "overlayfs",
+    "review",
+    "post-hoc",
+    "linux"
+  ]
+}

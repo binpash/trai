@@ -1,0 +1,18 @@
+{
+  "name": "trai-marketplace",
+  "owner": {
+    "name": "kkallas",
+    "email": "konstantinos.kallas@hotmail.com"
+  },
+  "description": "Single-plugin marketplace hosting trai.",
+  "plugins": [
+    {
+      "name": "trai",
+      "source": "./",
+      "description": "Per-Bash-call sandbox via binpash/try with post-hoc commit/discard review.",
+      "version": "0.1.0",
+      "category": "security",
+      "tags": ["sandbox", "overlayfs", "linux"]
+    }
+  ]
+}

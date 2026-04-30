@@ -1,0 +1,35 @@
+name: Distro and LVM tests
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+  schedule:
+    - cron: '17 20 * * *'
+
+jobs:
+  vagrant:
+    strategy:
+      fail-fast: false
+      matrix:
+        vagrant_target:
+          - debian
+          - debianrustup
+          - debianlvm
+          - rocky9
+          - fedora39
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cleanup
+        run: bash /home/runner/cleanup.sh
+
+      - name: Start vagrant box
+        run: vagrant up ${{ matrix.vagrant_target }}
+
+      - name: Stop vagrant box
+        run: vagrant destroy -f ${{ matrix.vagrant_target }}
+        if: ${{ success() || failure() }} # we want to run this step even if the last step failed
