@@ -185,3 +185,8 @@ overlays, which would interfere with work in progress).
 ## License
 
 MIT. See [`LICENSE`](LICENSE).
+
+## Acknowledgments
+
+The first version of this plugin was implemented by [Guy Van den Broeck](https://web.cs.ucla.edu/~guyvdb/) after a discussion over lunch.
+
