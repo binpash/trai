@@ -135,23 +135,23 @@ hooks/            session-start, pre-bash rewriter, session-end
 scripts/          doctor, passthrough matcher, filter, slash-command backers
 commands/         slash-command definitions
 config/           default passthrough + ignore lists
-docs/             research notes, design rationale, limitations (start here)
+docs/             user-facing docs: limitations, use cases
+docs/claude/      internal research notes and design rationale
 test/             end-to-end smoke test
 vendor/try/       binpash/try as a pinned submodule (fallback binary)
 ```
 
-Read the `docs/` directory before contributing — it explains why the plugin
-looks the way it does and what we deliberately chose *not* to build.
+User-facing docs:
 
-- [`docs/research-try.md`](docs/research-try.md) — how `try` works, its limits.
-- [`docs/research-claude-code.md`](docs/research-claude-code.md) — Claude Code
-  hooks, plugins, marketplaces.
-- [`docs/research-review-ux.md`](docs/research-review-ux.md) — post-hoc review
-  design landscape.
-- [`docs/design-notes.md`](docs/design-notes.md) — the seven locked-in
-  decisions and why.
-- [`docs/limitations.md`](docs/limitations.md) — full known-issue list with
-  workarounds.
+- [`docs/limitations.md`](docs/limitations.md) — full known-issue list with workarounds.
+- [`docs/use-cases.md`](docs/use-cases.md) — concrete examples of trai behavior.
+
+Internal / contributor docs (design rationale, research notes):
+
+- [`docs/claude/research-try.md`](docs/claude/research-try.md) — how `try` works, its limits.
+- [`docs/claude/research-claude-code.md`](docs/claude/research-claude-code.md) — Claude Code hooks, plugins, marketplaces.
+- [`docs/claude/research-review-ux.md`](docs/claude/research-review-ux.md) — post-hoc review design landscape.
+- [`docs/claude/design-notes.md`](docs/claude/design-notes.md) — the locked-in decisions and why.
 
 The implementation plan approved during design lives at
 `/scratch/<user>/.claude/plans/the-goal-of-this-hashed-flask.md` on the

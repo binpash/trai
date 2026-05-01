@@ -66,7 +66,7 @@ We ate one debugging round on that. The shape is the same as `settings.json`'s `
 
 Counterintuitive but important: `SessionStart` fires on **`startup`, `resume`, `clear`, and `compact`** (including auto-compact). If your handler unconditionally creates fresh per-session state, every `/compact` orphans the previous overlay and the plugin appears to "lose" state mid-session.
 
-Our `session-start.sh` is idempotent as a result: if `current-session` already points at an existing overlay dir, we reuse it and emit a `"resumed"` banner. New sessions are only created when there's nothing live to resume. See `docs/design-notes.md` §"Why SessionStart is idempotent."
+Our `session-start.sh` is idempotent as a result: if `current-session` already points at an existing overlay dir, we reuse it and emit a `"resumed"` banner. New sessions are only created when there's nothing live to resume. See `docs/claude/design-notes.md` §"Why SessionStart is idempotent."
 
 ### `PreToolUse` hook stdin — what Claude gives us
 

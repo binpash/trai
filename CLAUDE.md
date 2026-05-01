@@ -2,7 +2,7 @@
 
 This repo is a **Claude Code plugin** that sandboxes each `Bash` tool call through [binpash/try](https://github.com/binpash/try) so the user can review the accumulated filesystem diff after Claude finishes and choose to commit or discard.
 
-## Scope decisions (locked; see `docs/design-notes.md` for why)
+## Scope decisions (locked; see `docs/claude/design-notes.md` for why)
 
 1. **Per-Bash hook, not outer wrapper.** `PreToolUse(Bash)` rewrites each `Bash(x)` → `Bash(try -D $overlay 'x')` — passing the full command as a **single** arg (not `bash -c '...'`) because `try` internals do `echo "$@"` which collapses multi-args. `-D` implies `-n`.
 2. **Edit / Write / MultiEdit are NOT sandboxed.** They write through Node directly; hooks can't intercept them. Users rely on git for that half.
@@ -55,21 +55,21 @@ These all cost a debugging round in live sessions. They're written up fully in t
 
 | Symptom | Cause | Fix location |
 |---|---|---|
-| Plugin fails to load: `Hook load failed: ... path ["hooks"] received undefined` | `hooks/hooks.json` event map must be wrapped under a top-level `"hooks"` key, like `settings.json`. | `hooks/hooks.json`; `docs/research-claude-code.md` §"Configuration shape" |
-| `/trai:doctor` reports on an overlay, not the real host; `/trai:passthrough` silently fails | Plugin's own scripts getting sandboxed by the `PreToolUse(Bash)` hook | Self-exemption at top of `hooks/pre-bash.sh`; `docs/design-notes.md` §8 |
-| `ln: failed to create symbolic link 'temproot//bin/bin': Permission denied` on 2nd Bash call | Leftover symlinks in `overlay/temproot/` from try's incomplete cleanup | Pre-clean in `hooks/pre-bash.sh`; `docs/design-notes.md` §9 |
+| Plugin fails to load: `Hook load failed: ... path ["hooks"] received undefined` | `hooks/hooks.json` event map must be wrapped under a top-level `"hooks"` key, like `settings.json`. | `hooks/hooks.json`; `docs/claude/research-claude-code.md` §"Configuration shape" |
+| `/trai:doctor` reports on an overlay, not the real host; `/trai:passthrough` silently fails | Plugin's own scripts getting sandboxed by the `PreToolUse(Bash)` hook | Self-exemption at top of `hooks/pre-bash.sh`; `docs/claude/design-notes.md` §8 |
+| `ln: failed to create symbolic link 'temproot//bin/bin': Permission denied` on 2nd Bash call | Leftover symlinks in `overlay/temproot/` from try's incomplete cleanup | Pre-clean in `hooks/pre-bash.sh`; `docs/claude/design-notes.md` §9 |
 | `try: given sandbox 'X' is invalid` on 3rd+ Bash call | `sandbox_valid_or_empty()` refuses temproot with any non-directory entries | Same pre-clean as above |
-| `/trai:status` reports "no active session" mid-session after successful Bash calls | `SessionStart` re-fired on compact/resume and overwrote or cleared `current-session` | Idempotent bail-out in `hooks/session-start.sh`; `docs/design-notes.md` §10 |
-| `/trai:status` reports "no active session" even on a first-invocation Claude session where Bash calls just ran sandboxed | Runtime state (current-session, bypass-next) was in `$CLAUDE_PLUGIN_DATA` which lands on NFS when `$HOME` is NFS and/or varies between hook and slash-command contexts | Moved runtime state to `$XDG_STATE_HOME/trai/`; `docs/design-notes.md` §11 |
+| `/trai:status` reports "no active session" mid-session after successful Bash calls | `SessionStart` re-fired on compact/resume and overwrote or cleared `current-session` | Idempotent bail-out in `hooks/session-start.sh`; `docs/claude/design-notes.md` §10 |
+| `/trai:status` reports "no active session" even on a first-invocation Claude session where Bash calls just ran sandboxed | Runtime state (current-session, bypass-next) was in `$CLAUDE_PLUGIN_DATA` which lands on NFS when `$HOME` is NFS and/or varies between hook and slash-command contexts | Moved runtime state to `$XDG_STATE_HOME/trai/`; `docs/claude/design-notes.md` §11 |
 | `cd: /home/user/...: No such file or directory` inside every sandboxed Bash call | User launched Claude from a cwd path that traverses NFS `$HOME`; `/home` couldn't be overlayed; the symlink doesn't resolve inside the chroot | Launch Claude from real local-disk path, set `XDG_STATE_HOME` to local disk; `docs/limitations.md` §11 |
 | Overlay warnings about `/home`, `/run`, `/snap`, `/sys` | Cosmetic — `try` tries to overlay every top-level mountpoint and warns when it can't. Execution continues. | No fix needed; ignore |
 
 ## Where to read before changing things
 
-- **What is `try`, how does it work, what breaks it?** → `docs/research-try.md`
-- **How do Claude Code hooks / plugins / marketplaces work?** → `docs/research-claude-code.md`
-- **Why post-hoc review at all, what did we decide not to do?** → `docs/research-review-ux.md`
-- **Rationale for each locked-in decision** → `docs/design-notes.md`
+- **What is `try`, how does it work, what breaks it?** → `docs/claude/research-try.md`
+- **How do Claude Code hooks / plugins / marketplaces work?** → `docs/claude/research-claude-code.md`
+- **Why post-hoc review at all, what did we decide not to do?** → `docs/claude/research-review-ux.md`
+- **Rationale for each locked-in decision** → `docs/claude/design-notes.md`
 - **Known failure modes and workarounds** → `docs/limitations.md`
 
 ## Local dev setup
