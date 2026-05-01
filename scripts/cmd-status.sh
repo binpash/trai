@@ -44,7 +44,9 @@ size="$(du -sh "$overlay" 2>/dev/null | awk '{print $1}' || true)"
 try_bin="$(trai::try_bin 2>/dev/null || true)"
 changes=0
 if [[ -n "$try_bin" ]]; then
-  changes="$("$try_bin" summary "$overlay" 2>/dev/null | grep -cE '\((added|modified|deleted)\)' || true)"
+  changes="$("$try_bin" summary "$overlay" 2>/dev/null \
+    | "$CLAUDE_PLUGIN_ROOT/scripts/filter-ignored.sh" \
+    | grep -cE '\((added|modified|deleted)\)' || true)"
 fi
 
 cat <<EOF

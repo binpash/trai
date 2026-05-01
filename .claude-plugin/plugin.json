@@ -1,6 +1,6 @@
 {
   "name": "trai",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Sandbox every Bash tool call through binpash/try. Review the accumulated diff after the session and commit or discard.",
   "authors": [
     {"name": "kkallas", "email": "konstantinos.kallas@hotmail.com"},
