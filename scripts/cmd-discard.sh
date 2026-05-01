@@ -19,9 +19,9 @@ fi
 session_dir="$(dirname "$overlay")"
 echo "trai: discarding overlay at $session_dir ..."
 
-# Overlay's workdir may have UID-0-inside-userns-owned files that the invoking
-# user can't remove directly. chmod first; then rm -rf.
-chmod -R u+w "$session_dir" 2>/dev/null || true
+# The overlayfs workdir/work directory is created with d--------- permissions
+# by the kernel. chmod u+w alone isn't enough — rm -rf also needs +x to descend.
+chmod -R u+rwx "$session_dir" 2>/dev/null || true
 rm -rf "$session_dir" 2>/dev/null || true
 
 if [[ -d "$session_dir" ]]; then
