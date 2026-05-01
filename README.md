@@ -10,6 +10,29 @@ to apply or throw them away.
 
 ---
 
+## Example
+
+> **You:** Set up a Python virtualenv and install `requests` and `pytest`.
+
+Claude runs `python3 -m venv .venv` and `pip install requests pytest` — but
+nothing has touched your real filesystem yet. The writes are held in an overlay.
+
+> **You:** `/trai:diff`
+
+```
+.venv/bin/activate (added)
+.venv/lib/python3.11/site-packages/requests/ (created dir)
+.venv/lib/python3.11/site-packages/pytest/ (created dir)
+… 40 more files
+```
+
+> **You:** Looks good. `/trai:commit`
+
+Now the virtualenv is on disk. If the install had gone wrong, `/trai:discard --yes`
+would have left your project completely untouched.
+
+---
+
 ## What this actually does
 
 - Registers a `PreToolUse(Bash)` hook that rewrites every Bash command Claude
