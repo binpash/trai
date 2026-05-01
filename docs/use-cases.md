@@ -230,3 +230,97 @@ the directory with the `Write` tool or commit the `mkdir` first.
 **Use this sparingly.** The point of trai is to defer writes until reviewed.
 `/trai:passthrough` is for the occasional command that must land immediately
 (e.g., a credential file, a git commit, a socket that requires the real path).
+
+---
+
+## UC8 — Modifying an existing file
+
+When Claude overwrites a file that already exists on the real filesystem, the
+overlay captures only the new version. The original is untouched until commit.
+
+```bash
+cat myproject/config.txt       # passthrough — shows "version=1" from real FS
+echo "version=2" > myproject/config.txt   # sandboxed — stored in overlay
+cat myproject/config.txt       # passthrough — still shows "version=1"
+```
+
+```
+/trai:diff
+  myproject/config.txt (modified)
+```
+
+```
+/trai:commit
+  trai: committing 1 change(s) ...
+
+cat myproject/config.txt       # now shows "version=2"
+```
+
+**Why `cat` shows the old value after the write.** `cat` is on the
+passthrough list, so it reads the real filesystem directly, bypassing the
+overlay. Only sandboxed commands see the overlay's version. This is the
+correct behaviour: it lets you verify that the overlay is truly isolated
+from the live filesystem before committing.
+
+---
+
+## UC9 — Symlinks and directory creation
+
+trai tracks not just file additions and modifications but also directory
+creation and symlink creation as distinct entry types.
+
+```bash
+mkdir -p myproject/bin
+echo "#!/bin/sh" > myproject/bin/run.sh
+ln -s myproject/bin/run.sh myproject/run
+```
+
+```
+/trai:diff
+  myproject/bin (created dir)
+  myproject/bin/run.sh (added)
+  myproject/run (symlink)
+```
+
+All three entry types are counted in `/trai:status` and `/trai:diff`.
+After commit, the symlink is preserved on the real filesystem with its
+original target path intact.
+
+**Edge case: symlink-only overlay.** If the overlay contains only
+`(created dir)` or `(symlink)` entries and no plain `(added)` files,
+`/trai:commit` still applies them correctly — they are not
+skipped as "nothing to commit".
+
+---
+
+## UC10 — Status and diff counts agree
+
+`/trai:status` reports a `changed files` count that always matches the
+number of entries shown by `/trai:diff`. Both counts include all entry
+types: `(added)`, `(modified)`, `(deleted)`, `(created dir)`, and
+`(symlink)`.
+
+```bash
+mkdir -p work
+echo a > work/a.txt
+echo b > work/b.txt
+echo c > work/c.txt
+echo d > work/d.txt
+echo e > work/e.txt
+```
+
+```
+/trai:status
+  changed files: 6      ← 1 directory + 5 files
+
+/trai:diff
+  work (created dir)
+  work/a.txt (added)
+  work/b.txt (added)
+  work/c.txt (added)
+  work/d.txt (added)
+  work/e.txt (added)    ← 6 entries total
+```
+
+The two numbers agree. Use `/trai:status` for a quick summary and
+`/trai:diff` when you need to see exactly which paths changed.
