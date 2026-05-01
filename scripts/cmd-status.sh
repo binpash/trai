@@ -46,7 +46,7 @@ changes=0
 if [[ -n "$try_bin" ]]; then
   changes="$("$try_bin" summary "$overlay" 2>/dev/null \
     | "$CLAUDE_PLUGIN_ROOT/scripts/filter-ignored.sh" \
-    | grep -cE '\((added|modified|deleted)\)' || true)"
+    | grep -cE '\([a-z][a-z ]*\)$' || true)"
 fi
 
 cat <<EOF

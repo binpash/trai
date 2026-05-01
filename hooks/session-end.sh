@@ -14,13 +14,13 @@ fi
 
 # Ask `try summary` whether there is anything to review. It's noisy on stderr
 # (mount warnings) but prints a clean list on stdout; we only care if any
-# "(added|modified|deleted)" lines appear.
+# change-type lines appear (added, modified, deleted, created dir, symlink, …).
 try_bin="$(trai::try_bin || true)"
 if [[ -z "$try_bin" ]]; then
   exit 0
 fi
 summary="$("$try_bin" summary "$overlay" 2>/dev/null || true)"
-count="$(printf '%s\n' "$summary" | grep -cE '\((added|modified|deleted)\)' || true)"
+count="$(printf '%s\n' "$summary" | grep -cE '\([a-z][a-z ]*\)$' || true)"
 
 if [[ "${count:-0}" -eq 0 ]]; then
   exit 0

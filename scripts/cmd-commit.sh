@@ -26,7 +26,7 @@ while IFS= read -r pat; do
   ignore_args+=(-i "$esc")
 done < <(trai::config | jq -r '.ignore[]')
 
-count="$("$try_bin" "${ignore_args[@]}" summary "$overlay" 2>/dev/null | grep -cE '\((added|modified|deleted)\)' || true)"
+count="$("$try_bin" "${ignore_args[@]}" summary "$overlay" 2>/dev/null | grep -cE '\([a-z][a-z ]*\)$' || true)"
 if [[ "${count:-0}" -eq 0 ]]; then
   echo "trai: overlay is empty; nothing to commit. Session remains active."
   exit 0
