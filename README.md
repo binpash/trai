@@ -84,6 +84,15 @@ cd <your clone> && git submodule update --init vendor/try
 Once installed, there is nothing to do — the plugin activates on every Claude
 Code session and sandboxes your Bash calls transparently. At any point:
 
+> **Tip for best results:** before starting a work session, feed Claude the
+> [`claude-trai-guide.md`](claude-trai-guide.md) file from this repo. It
+> gives Claude the context it needs to correctly interpret `/trai:diff` output,
+> understand what is and isn't sandboxed, and avoid common gotchas:
+>
+> ```
+> /read claude-trai-guide.md
+> ```
+
 | Slash command            | What it does                                                          |
 |--------------------------|-----------------------------------------------------------------------|
 | `/trai:status`            | Overlay path, size, number of changed files.                          |
