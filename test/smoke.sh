@@ -138,7 +138,7 @@ assert "[[ \"\$(cat '$CLAUDE_PROJECT_DIR/hello.txt')\" == 'hello' ]]"
 
 # -----------------------------------------------------------------------------
 say "9. session pointer cleared after commit"
-assert "[[ -z \"\$(cat '$CLAUDE_PLUGIN_DATA/current-session' 2>/dev/null || true)\" ]]"
+assert "[[ -z \"\$(cat '$XDG_STATE_HOME/trai/current-session' 2>/dev/null || true)\" ]]"
 
 # -----------------------------------------------------------------------------
 say "10. discard path"
@@ -149,7 +149,7 @@ assert "[[ ! -f '$CLAUDE_PROJECT_DIR/junk.txt' ]]"
 "$CLAUDE_PLUGIN_ROOT/scripts/cmd-discard.sh" --yes >/dev/null
 assert "[[ ! -f '$CLAUDE_PROJECT_DIR/junk.txt' ]]"
 # session pointer should be cleared
-assert "[[ -z \"\$(cat '$CLAUDE_PLUGIN_DATA/current-session' 2>/dev/null || true)\" ]]"
+assert "[[ -z \"\$(cat '$XDG_STATE_HOME/trai/current-session' 2>/dev/null || true)\" ]]"
 
 # -----------------------------------------------------------------------------
 say "11. /trai:passthrough one-shot bypass"
