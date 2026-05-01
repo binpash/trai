@@ -1,8 +1,8 @@
 # trai
 
-A Claude Code plugin that sandboxes **each individual Bash tool call** through
+A Claude Code plugin that sandboxes **Bash tool calls** through
 [binpash/try](https://github.com/binpash/try) so the filesystem side-effects of
-shell commands stay in an overlay until you review them. At session end, run
+shell commands stay in an overlay until you review them. At session end (or when you are ready to commit), run
 `/trai:diff` to see the accumulated changes and `/trai:commit` or `/trai:discard`
 to apply or throw them away.
 
@@ -58,6 +58,7 @@ would have left your project completely untouched.
 
 Full list: [`docs/limitations.md`](docs/limitations.md).
 
+
 ---
 
 ## Install
@@ -78,7 +79,7 @@ sudo apt install -y util-linux attr jq bsdextrautils
 
 ```sh
 # In a running Claude Code session:
-/plugin marketplace add https://github.com/UCLA-StarAI/trai
+/plugin marketplace add https://github.com/binpash/trai
 /plugin install trai
 /trai:doctor
 ```
@@ -99,6 +100,9 @@ cd <your clone> && git submodule update --init vendor/try
 
 `scripts/doctor.sh` falls back to `vendor/try/try` if no system `try` is on
 `$PATH`.
+
+
+
 
 ---
 
