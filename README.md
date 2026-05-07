@@ -55,6 +55,9 @@ would have left your project completely untouched.
   built-in bubblewrap/Seatbelt sandbox in addition.
 - **Does not wrap `sudo`, `docker`, `podman`.** They fail opaquely inside an
   unprivileged user namespace and are explicitly passthrough.
+- **Not tested with concurrent Claude sessions.** One overlay is shared across
+  all Bash calls; running multiple Claude sessions simultaneously against it is
+  not tested. The expected usage is a single Claude agent per session.
 
 Full list: [`docs/limitations.md`](docs/limitations.md).
 
