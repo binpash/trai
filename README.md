@@ -33,19 +33,7 @@ would have left your project completely untouched.
 
 ---
 
-## What this actually does
-
-- Registers a `PreToolUse(Bash)` hook that rewrites every Bash command Claude
-  issues from `npm install` to `try -D <overlay> 'npm install'`.
-- Every command in the session shares one overlay dir under
-  `$XDG_STATE_HOME/trai/sessions/<id>/` so sequential commands see each
-  other's state coherently (call 2 sees files call 1 created).
-- Read-only and git-related commands (see `config/defaults.json`) pass through
-  unwrapped.
-- At end of session, `/trai:diff` shows the accumulated diff and `/trai:commit`
-  applies it to the real filesystem.
-
-## What this does **not** do
+## What trai does **not** do
 
 - **Does not sandbox `Edit` / `Write` / `MultiEdit` tool calls.** Those write
   directly through Claude's Node process; our Bash hook can't intercept them.
@@ -112,7 +100,7 @@ cd <your clone> && git submodule update --init vendor/try
 ## Usage
 
 Once installed, there is nothing to do — the plugin activates on every Claude
-Code session and sandboxes your Bash calls transparently. At any point:
+Code session and sandboxes your Bash calls transparently.
 
 > **Tip for best results:** before starting a work session, feed Claude the
 > [`claude-trai-guide.md`](claude-trai-guide.md) file from this repo. It
@@ -122,6 +110,8 @@ Code session and sandboxes your Bash calls transparently. At any point:
 > ```
 > /read claude-trai-guide.md
 > ```
+
+At any point, you can use these commands:
 
 | Slash command            | What it does                                                          |
 |--------------------------|-----------------------------------------------------------------------|
@@ -147,6 +137,20 @@ Or, if things went sideways:
 ```
 /trai:discard --yes
 ```
+
+---
+
+## How it works
+
+- Registers a `PreToolUse(Bash)` hook that rewrites every Bash command Claude
+  issues from `npm install` to `try -D <overlay> 'npm install'`.
+- Every command in the session shares one overlay dir under
+  `$XDG_STATE_HOME/trai/sessions/<id>/` so sequential commands see each
+  other's state coherently (call 2 sees files call 1 created).
+- Read-only and git-related commands (see `config/defaults.json`) pass through
+  unwrapped.
+- At end of session, `/trai:diff` shows the accumulated diff and `/trai:commit`
+  applies it to the real filesystem.
 
 ---
 
@@ -217,8 +221,7 @@ overlays, which would interfere with work in progress).
 3. **`/trai:commit` is destructive.** Run `/trai:diff` first.
 4. **Long-running daemons** (`npm run dev &`) shouldn't be wrapped; add them to
    the passthrough list.
-5. **`try` is prototype-quality.** Upstream has ~30 open issues around edge
-   cases; expect quirks on exotic filesystems (NFS `$HOME`, btrfs subvolumes,
+5. **`try` is prototype-quality.** There are edge case issues; expect quirks on exotic filesystems (NFS `$HOME`, btrfs subvolumes,
    Docker-in-Docker). Run `/trai:doctor` if things misbehave.
 
 ## License
