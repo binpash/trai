@@ -100,7 +100,7 @@ cd <your clone> && git submodule update --init vendor/try
 ## Usage
 
 Once installed, there is nothing to do — the plugin activates on every Claude
-Code session and sandboxes your Bash calls transparently.
+Code session and sandboxes your Bash calls transparently. 
 
 > **Tip for best results:** before starting a work session, feed Claude the
 > [`claude-trai-guide.md`](claude-trai-guide.md) file from this repo. It
@@ -111,7 +111,7 @@ Code session and sandboxes your Bash calls transparently.
 > /read claude-trai-guide.md
 > ```
 
-At any point, you can use these commands:
+Trai supports these commands:
 
 | Slash command            | What it does                                                          |
 |--------------------------|-----------------------------------------------------------------------|
